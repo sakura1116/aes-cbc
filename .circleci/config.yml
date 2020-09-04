@@ -1,0 +1,32 @@
+# https://circleci.com/docs/2.0/configuration-reference/
+
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.8.2-buster
+        environment: # environment variables for primary container
+          PYTHONPATH: /home/circleci/repo/app_py
+          TZ: Asia/Tokyo
+          PIPENV_VENV_IN_PROJECT: true
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run: pipenv install --system --dev
+      - run: make py_test
+      - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.8/site-packages"
+
+workflows:
+  test:
+    jobs:
+      - test
