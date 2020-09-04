@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  aescbc:
+    build:
+      context: .
+    volumes:
+      - .:/opt/sakura:cached
+    tty: true
