@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[dev-packages]
+flake8 = "*"
+v = {editable = true,version = "*"}
+pytest = "*"
+ipython = "*"
+
+[packages]
+pycryptodomex = "*"
+pycryptodome = "*"
+
+[requires]
+python_version = "3.8"
